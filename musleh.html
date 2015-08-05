@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>MUSLEH three.js</title>
+	<meta charset="utf-8">
+	<style>
+		body {
+			font-family: monospace;
+			background-color: #000000;
+			margin: 0px;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="//rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
+	<script src="js/three.min.js"></script>
+	<script src="http://threejs.org/examples/js/controls/TrackballControls.js"></script>
+	<script src="http://threejs.org/examples/js/controls/FlyControls.js"></script>
+	<script>
+		var container, stats;
+
+		var camera, controls, scene, renderer, clock;
+
+		var group;
+
+		var targetRotation = 0;
+		var targetRotationOnMouseDown = 0;
+
+		var mouseX = 0;
+		var mouseXOnMouseDown =0;
+
+		var windowHalfX = window.innerWidth / 2;
+		var windowHalfY = window.innerHeight/ 2;
+
+		var M_mesh;
+
+		init();
+		animate();
+
+		function init () {
+
+			container = document.createElement('div');
+			document.body.appendChild(container);
+
+			var info = document.createElement('div');
+			info.style.position = 'absolute';
+			info.style.top = '10px';
+			info.style.width = '100%';
+			info.style.color = '#ffffff';
+			info.style.textAlign = 'center';
+			info.innerHTML = 'This is my attempt at three.js';
+			container.appendChild(info);
+
+			scene = new THREE.Scene();
+
+			clock = new THREE.Clock();
+
+			camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 1, 1000);
+			camera.position.set(0,150,500);
+			scene.add(camera);
+
+			var light = new THREE.PointLight(0xffffff,0.8);
+			camera.add(light);
+
+			controls = new THREE.FlyControls (camera);
+
+			// controls.noZoom = false;
+			// controls.noPan = false;
+			// controls.staticMoving = true;
+			controls.movementSpeed = 1000;
+			controls.domElement = container;
+			controls.rollSpeed = Math.PI/24;
+			controls.autoForward = false;
+			controls.ragToLook = false;
+
+
+			//controls.addEventListener ('change', render);
+
+
+			group = new THREE.Group();
+			group.position.y = 50;
+			scene.add(group);
+
+			renderer = new THREE.WebGLRenderer( {antialias: true});
+			renderer.setClearColor(0x000000);
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			container.appendChild(renderer.domElement);
+
+			stats = new Stats ();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			container.appendChild(stats.domElement);
+			// stats.setMode(2);
+
+			var extrudeSettings = { amount: 8, bevelEnabled: false, steps: 2 };
+
+			var M_Pts = [];
+			M_Pts.push( new THREE.Vector2 (25,25));
+			M_Pts.push( new THREE.Vector2 (45,25));
+			M_Pts.push( new THREE.Vector2 (50,20));
+			M_Pts.push( new THREE.Vector2 (55,25));
+			M_Pts.push( new THREE.Vector2 (75,25));
+			M_Pts.push( new THREE.Vector2 (75,0 ));
+			M_Pts.push( new THREE.Vector2 (55,0 ));
+			M_Pts.push( new THREE.Vector2 (55,15));
+			M_Pts.push( new THREE.Vector2 (50,10));
+			M_Pts.push( new THREE.Vector2 (45,15));
+			M_Pts.push( new THREE.Vector2 (45,0 ));
+			M_Pts.push( new THREE.Vector2 (25,0 ));
+			M_Pts.push( new THREE.Vector2 (25,25));
+
+			var M = new THREE.Shape ( M_Pts );
+
+			var M_geometry = new THREE.ExtrudeGeometry( M , extrudeSettings);
+
+			M_mesh = new THREE.Mesh (M_geometry, new THREE.MeshPhongMaterial( { color: 0xf0f0ff }));
+
+			M_mesh.position.set(60,100,0);
+			M_mesh.rotation.set(0,0,0);
+			M_mesh.scale.set(1,1,1);
+			group.add(M_mesh);
+		}
+
+		function animate (){
+
+			requestAnimationFrame (animate);
+			
+			render();
+			stats.update();
+			//controls.update();
+
+		}
+
+		function render() {
+
+			var rotaionSpeed = 1.0;
+			//group.rotation.y += (targetRotation - group.rotation.y ) * 0.05;
+			var delta = clock.getDelta();
+			M_mesh.rotation.y += rotaionSpeed * delta;
+			controls.update(delta);
+			renderer.clear();
+			renderer.render(scene,camera);
+
+		}
+
+	</script>
+</body>
+</html>
