@@ -24,7 +24,7 @@
 
 		var camera, controls, scene, renderer, clock;
 
-		var movingLight;
+		var movingLight,movingLight1,movingLight2;
 
 		var group;
 
@@ -49,11 +49,6 @@
 		var next_letter_position_y = 0;
 		var next_letter_position_z = 0;
 		var meshes = [];
-
-		// $.getJSON('alphanumeric.json', function (data){
-			// alphanumerics = data['alphanumeric'];
-			// alert(alphanumerics['M']);
-		// });
 
 		init();
 		animate();
@@ -84,30 +79,32 @@
 			var light = new THREE.PointLight(0xffffff,0.8);
 			camera.add(light);
 
+			controls = new THREE.TrackballControls(camera);
+			controls.rotateSpeed=1.0;
+			controls.zoomSpeed=1.2;
+			controls.panSpeed=0.8;
 
-			// controls = new THREE.FlyControls (camera);
+			controls.noZoom=false;
+			controls.noPan = false;
 
-			// controls.noZoom = false;
-			// controls.noPan = false;
-			// controls.staticMoving = true;
-
-			// controls.movementSpeed = 1000;
-			// controls.domElement = container;
-			// controls.rollSpeed = Math.PI/24;
-			// controls.autoForward = false;
-			// controls.ragToLook = false;
-
-
-			//controls.addEventListener ('change', render);
-
+			controls.staticMoving = true;
+			controls.dynamicDampingFactor = 0.3;
+			controls.keys = [65,83,68];
+			controls.addEventListener('change',render);
 
 			group = new THREE.Group();
 			group.position.y = 50;
 			scene.add(group);
 			group.position.set(0,0,0);
 
-			movingLight = new THREE.PointLight(0xffffff,3,1000);
+			movingLight = new THREE.PointLight(0x00ff00,3,1000);
+			movingLight1 = new THREE.PointLight(0x00ff00,3,1000);
+			movingLight2 = new THREE.PointLight(0x00ff00,3,1000);
 			group.add(movingLight);
+			group.add(movingLight1);
+			group.add(movingLight2);
+			movingLight1.position.set(-5,-1,-5);
+			movingLight2.position.set(5,-1,-5);
 
 			renderer = new THREE.WebGLRenderer( {antialias: true});
 			renderer.setClearColor(0x000000);
@@ -119,47 +116,12 @@
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
 			container.appendChild(stats.domElement);
-			// stats.setMode(2);
 
 			var extrudeSettings = { amount: 16, bevelEnabled: false, steps: 2 };
 
-			// var M_Pts = [];
-			// M_Pts.push( new THREE.Vector2 (0,25));
-			// M_Pts.push( new THREE.Vector2 (20,25));
-			// M_Pts.push( new THREE.Vector2 (25,20));
-			// M_Pts.push( new THREE.Vector2 (30,25));
-			// M_Pts.push( new THREE.Vector2 (50,25));
-			// M_Pts.push( new THREE.Vector2 (50,0 ));
-			// M_Pts.push( new THREE.Vector2 (30,0 ));
-			// M_Pts.push( new THREE.Vector2 (30,15));
-			// M_Pts.push( new THREE.Vector2 (25,10));
-			// M_Pts.push( new THREE.Vector2 (20,15));
-			// M_Pts.push( new THREE.Vector2 (20,0 ));
-			// M_Pts.push( new THREE.Vector2 (0,0 ));
-			// M_Pts.push( new THREE.Vector2 (0,25));
-
-			// var M = new THREE.Shape ( M_Pts );
-
-			// var M_geometry = new THREE.ExtrudeGeometry( M , extrudeSettings);
-
-			// M_mesh = new THREE.Mesh (M_geometry, new THREE.MeshPhongMaterial( { color: 0x000000 }));
-
-			// M_mesh.position.set(0,0,0);
-			// M_mesh.rotation.set(0,0,0);
-			// M_mesh.scale.set(1,1,1);
-			// group.add(M_mesh);
-
-			$(window).load();
-
-
 			for (var i = 0; i < name.length; i++) {
 				var pts = [];
-				// alert(alphanumerics.alphanumeric[name[i]]);
-				// alert(alphanumerics['M']);
-				//alert(typeof alphanumerics[name[i]]);
-				//var cords = alphanumerics[name[i]];
 				for (var j = 0; j < alphanumerics.alphanumeric[name[i]].length; j++) {
-					// alert(alphanumerics.alphanumeric[name[i]][j][0]);
 					pts.push(new THREE.Vector2 ((alphanumerics.alphanumeric[name[i]][j][0]),(alphanumerics.alphanumeric[name[i]][j][1])));
 				};
 
@@ -168,64 +130,34 @@
 				meshes.push(new THREE.Mesh(letter_geometry, new THREE.MeshPhongMaterial({color : 0x000000})));
 				meshes[i].position.set(next_letter_position_x, next_letter_position_y,next_letter_position_z);
 				next_letter_position_x+=60;
-				meshes[i].rotation.set(0,0,0);
 				meshes[i].scale.set(1,1,1);
+				meshes[i].rotation.set(0,0,0);
 				group.add(meshes[i]);
 			};
-			// alert(meshes[1].position.x);
+
 			for (var i = 0; i < meshes.length; i++) {
-				meshes[i].position.set(meshes[i].position.x-(next_letter_position_x/2),0,0);
+				meshes[i].position.set(meshes[i].position.x-(next_letter_position_x/2),0,600);
 			};
 
 			var L_pts = [];
 			L_pts.push(new THREE.Vector2(0,25));
-			L_pts.push(new THREE.Vector2(20,25));
-			L_pts.push(new THREE.Vector2(20,17));
-			L_pts.push(new THREE.Vector2(30,17));
-			L_pts.push(new THREE.Vector2(30,25));
 			L_pts.push(new THREE.Vector2(50,25));
 			L_pts.push(new THREE.Vector2(50,0));
 			L_pts.push(new THREE.Vector2(30,0));
-			L_pts.push(new THREE.Vector2(30,7));
-			L_pts.push(new THREE.Vector2(20,7));
+			L_pts.push(new THREE.Vector2(30,20));
+			L_pts.push(new THREE.Vector2(20,20));
+			L_pts.push(new THREE.Vector2(20,15));
+			L_pts.push(new THREE.Vector2(30,15));
+			L_pts.push(new THREE.Vector2(30,10));
+			L_pts.push(new THREE.Vector2(20,10));
 			L_pts.push(new THREE.Vector2(20,0));		
 			L_pts.push(new THREE.Vector2(0,0));
 			L_pts.push(new THREE.Vector2(0,25));
 			var L = new THREE.Shape(L_pts);
 			var L_geometry = new THREE.ExtrudeGeometry(L,extrudeSettings);
 			var L_mesh = new THREE.Mesh(L_geometry,new THREE.MeshPhongMaterial({color:0x000000}));
-			L_mesh.position.set(300,0,0);
+			L_mesh.position.set(0,35,0);
 			// group.add(L_mesh);
-
-
-			// var material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-			// var geometry = new THREE.Geometry();	
-			// geometry.vertices.push(new THREE.Vector3(-50, 0, 50));
-   //  		geometry.vertices.push(new THREE.Vector3(0, 100, 50));
-   //  		geometry.vertices.push(new THREE.Vector3(100, 0, 50));
-   //  		group.add(new THREE.Line(geometry, material));
-
-			// var U_Pts = [];
-			// U_Pts.push(new THREE.Vector2(0,25));
-			// U_Pts.push(new THREE.Vector2(20,25));
-			// U_Pts.push(new THREE.Vector2(20,10));
-			// U_Pts.push(new THREE.Vector2(30,10));
-			// U_Pts.push(new THREE.Vector2(30,25));
-			// U_Pts.push(new THREE.Vector2(50,25));
-			// U_Pts.push(new THREE.Vector2(50,0));
-			// U_Pts.push(new THREE.Vector2(0,0));
-			// U_Pts.push(new THREE.Vector2(0,25));
-
-			// var U = new THREE.Shape( U_Pts);
-
-			// var U_geometry = new THREE.ExtrudeGeometry( U, extrudeSettings);
-
-			// U_Mesh = new THREE.Mesh(U_geometry, new THREE.MeshPhongMaterial( { color: 0x000000 }));
-
-			// U_Mesh.position.set(60,0,0);
-			// U_Mesh.rotation.set(0,0,0);
-			// U_Mesh.scale.set(1,1,1);
-			// group.add(U_Mesh);
 
 			var S_Pts = [];
 			S_Pts.push(new THREE.Vector2(0,25));
@@ -253,12 +185,14 @@
 			S_Mesh.scale.set(1,1,1);
 			// group.add(S_Mesh);
 
-			var floor_geometry = new THREE.BoxGeometry(110,2,16);
-			var floor_material = new THREE.MeshPhongMaterial({color : 0x0000ff});
+			// var floor_geometry = new THREE.BoxGeometry(next_letter_position_x-10,6,16);
+			var floor_geometry = new THREE.BoxGeometry(10,6,16);
+			var floor_material = new THREE.MeshPhongMaterial({color : 0x000000});
 			floor_Mesh = new THREE.Mesh(floor_geometry,floor_material);
-			// floor_Mesh.material.side = THREE.DoubleSide;
-			floor_Mesh.position.set(55,-1,-8);
-			group.add(floor_Mesh);
+			floor_Mesh.position.set(-5,-4,8);
+			// floor_Mesh.name='floor';
+			// scene.add(floor_Mesh);
+			// floor_Mesh.geometry.dynamic=true;
 			//add the satellite
 			var satellite = new THREE.SphereGeometry (10,16,8);
 
@@ -267,75 +201,96 @@
 			satellite_mesh.rotation.set(0,0,0);
 			satellite_mesh.scale.set(1,1,1);
 			group.add(satellite_mesh);
-			// alert(satellite_mesh.position.x);
-			//scene.add(satellite_mesh);
-
-			// var material = new THREE.LineBasicMaterial({color:0xffffff, opacity:1});
-			// var ellipse = new THREE.EllipseCurve(0, 0, 105, 0, 0, 2.0 * Math.PI, false);
-			// var ellipsePath = new THREE.CurvePath();
-			// ellipsePath.add(ellipse);
-			// var ellipseGeometry = ellipsePath.createPointsGeometry(1000);
-			// ellipseGeometry.computeTangents();
-			// var line = new THREE.Line(ellipseGeometry, material);
-			// group.add( line );
 		}
 
 		function animate (){
 
 			requestAnimationFrame (animate);
-
+			controls.update();
 			render();
 			stats.update();
-			//controls.update();
-
 		}
-
-		// var group_length = 50 + 10 + 50;
-		// var group_height = 25;
-		// var ratio = (group_height+50)/(group_length + 100);
-		// // alert(ratio);
-		// var minus_X = 1;
-		// var minus_Y = 1;
-		// var idx = 0;
-		// function update_X (current_X, z) {
-		// 	if (current_X <= -50) {minus_X=1;};
-		// 	if ((current_X > -50) && (current_X < (group_length+50))) {};
-		// 	if (current_X >= (group_length+50)) {minus_X=-1;};
-		// 	// if (idx<10) {alert((minus_X*(Math.abs(z)/(Math.abs(current_X)))));idx+=1;};
-		// 	return (current_X += (minus_X*(Math.abs(z)/(Math.abs(current_X)))));
-		// }
-
-		// function update_Y (current_Y) {
-		// 	if (current_Y <= -25) {minus_Y=1};
-		// 	if (current_Y > -25 && current_Y < (group_height+25)) {};
-		// 	if (current_Y >= (group_height+25)) {minus_Y=-1};
-		// 	return current_Y += (minus_Y);
-		// }
-
-		var x=0;
+		
+		var len = 10;
+		var inc = 5;
 
 		function render() {
 
 			var rotaionSpeed = 1.0;
-			//group.rotation.y += (targetRotation - group.rotation.y ) * 0.05;
 			var delta = clock.getDelta();
-			// M_mesh.rotation.y += rotaionSpeed * delta;
-			//group.rotation.y += rotaionSpeed * delta;
-			// controls.update(delta);
 			var time = Date.now() * 0.001;
-			// var yo = [1,1,1,1,1,1];
-			// if ( x < 10 ) {alert(satellite_mesh.position.y/75);x+=1;};
-
 
 			satellite_mesh.position.x = next_letter_position_x/2 * Math.cos (time);
 			satellite_mesh.position.y = 75 * Math.sin (time * 1.25);
 			satellite_mesh.position.z = 100 * Math.sin (time);
+			// alert(delta*rotaionSpeed);
+			// meshes[0].rotateX(0.02);
+			var idx = 7;
+			for (var i = meshes.length/2; i < meshes.length; i++) {
+				// meshes[i].rotateX((1)/100.0);
+				// meshes[i].rotateY((1)/100.0);
+				// meshes[i].rotateZ((1)/100.0);
+				if (meshes[i].position.z>0) {
+					meshes[i].position.z-=Math.sqrt(idx);
+					idx-=1;
+				};
+			};
+			idx=7;
+			for (var i = meshes.length/2-1; i >=0 ; i--) {
+				if (meshes[i].position.z>0) {
+					meshes[i].position.z-=Math.sqrt(idx);
+					idx-=1;
+				};
+			};
+
+			if (len<next_letter_position_x-10){
+				scene.remove(scene.getObjectByName('floor'));
+				var floor_geometry = new THREE.BoxGeometry(len,6,16);
+				var floor_material = new THREE.MeshPhongMaterial({color : 0x000000});
+				floor_Mesh = new THREE.Mesh(floor_geometry,floor_material);
+				floor_Mesh.position.set(-5,-4,8);
+				movingLight1.position.x=floor_Mesh.geometry.vertices[7].x;
+				movingLight2.position.x=floor_Mesh.geometry.vertices[0].x;
+				floor_Mesh.name='floor';
+				scene.add(floor_Mesh);
+				len+=Math.sqrt(inc,2);
+				if (inc>1) {
+					inc-=1;
+				};
+			}		
+			// while(idx<10){
+			// 	if (floor_Mesh.geometry.vertices[0].x<next_letter_position_x-10) {
+			// 		scene.remove(floor_Mesh);
+			// 		var floor_geometry = new THREE.BoxGeometry(floor_Mesh.geometry.vertices[0].x+Math.pow(idx,2),6,16);
+			// 		var floor_material = new THREE.MeshPhongMaterial({color : 0x000000});
+			// 		floor_Mesh = new THREE.Mesh(floor_geometry,floor_material);
+			// 		floor_Mesh.position.set(-5,-4,8);
+			// 		scene.add(floor_Mesh);
+			// 	};
+			// 	idx++;
+			// };
+			// animate();
+
+			// idx=1;
+			// for (var i = 0; i < floor_Mesh.geometry.vertices.length/2; i++) {
+			// 	if (floor_Mesh.geometry.vertices[i]<next_letter_position_x/2-10) {
+			// 		floor_Mesh.geometry.vertices[i].x+=Math,pow(idx,2);
+			// 	};
+			// };
+			// if(yo<10 && (meshes[0].position.z<=0)){
+			// 	// for (var i = 0; i < floor_Mesh.geometry.vertices.length; i++) {
+			// 		alert('x: '+floor_Mesh.geometry.vertices[0].x+'y: '+floor_Mesh.geometry.vertices[0].y+'z: '+floor_Mesh.geometry.vertices[0].z+'           x: '+floor_Mesh.geometry.vertices[7].x+'y: '+floor_Mesh.geometry.vertices[7].y+'z: '+floor_Mesh.geometry.vertices[7].z);
+			// 	// };
+			// 	// alert(floor_Mesh.geometry.vertices[5].x);
+			// 	yo+=1;
+			// }
+			// meshes[4].position+=meshes[4].position.applyEuler(new THREE.Euler(0.01,0.0,0.01,'XYZ'));
+			// var quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,0),Math.PI/2);
+			// meshes[4].rotation.setFromQuaternion(quaternion);
 			movingLight.position.copy (satellite_mesh.position);
-			//satellite_mesh.position.x = update_X(satellite_mesh.position.x, Math.sin(time));
-			//satellite_mesh.position.y = update_Y(satellite_mesh.position.y);
 			camera.lookAt(scene.position);
 
-			renderer.clear();
+			// renderer.clear();
 			renderer.render(scene,camera);
 
 		}
