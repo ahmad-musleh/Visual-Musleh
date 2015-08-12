@@ -26,6 +26,8 @@
 
 		var movingLight,movingLight1,movingLight2;
 
+		var lights;
+
 		var group;
 
 		var targetRotation = 0;
@@ -98,13 +100,13 @@
 			group.position.set(0,0,0);
 
 			movingLight = new THREE.PointLight(0x00ff00,3,1000);
-			movingLight1 = new THREE.PointLight(0x00ff00,3,1000);
-			movingLight2 = new THREE.PointLight(0x00ff00,3,1000);
+			movingLight1 = new THREE.SpotLight(0x00ff00,3,1000);
+			movingLight2 = new THREE.SpotLight(0x00ff00,3,1000);
 			group.add(movingLight);
 			group.add(movingLight1);
 			group.add(movingLight2);
-			movingLight1.position.set(-5,-1,-5);
-			movingLight2.position.set(5,-1,-5);
+			movingLight1.position.set(-5,0,-5);
+			movingLight2.position.set(5,0,-5);
 
 			renderer = new THREE.WebGLRenderer( {antialias: true});
 			renderer.setClearColor(0x000000);
@@ -141,16 +143,24 @@
 
 			var L_pts = [];
 			L_pts.push(new THREE.Vector2(0,25));
-			L_pts.push(new THREE.Vector2(50,25));
-			L_pts.push(new THREE.Vector2(50,0));
-			L_pts.push(new THREE.Vector2(30,0));
-			L_pts.push(new THREE.Vector2(30,20));
-			L_pts.push(new THREE.Vector2(20,20));
-			L_pts.push(new THREE.Vector2(20,15));
-			L_pts.push(new THREE.Vector2(30,15));
-			L_pts.push(new THREE.Vector2(30,10));
-			L_pts.push(new THREE.Vector2(20,10));
-			L_pts.push(new THREE.Vector2(20,0));		
+			L_pts.push(new THREE.Vector2(47,25));
+			L_pts.push(new THREE.Vector2(50,23));
+			L_pts.push(new THREE.Vector2(50,14));
+			L_pts.push(new THREE.Vector2(47,12.5));
+			L_pts.push(new THREE.Vector2(50,11));
+			L_pts.push(new THREE.Vector2(50,2));
+			L_pts.push(new THREE.Vector2(47,0));
+			L_pts.push(new THREE.Vector2(20,0));
+			L_pts.push(new THREE.Vector2(20,5));
+			L_pts.push(new THREE.Vector2(40,5));		
+			L_pts.push(new THREE.Vector2(40,10));		
+			L_pts.push(new THREE.Vector2(20,10));		
+			L_pts.push(new THREE.Vector2(20,15));		
+			L_pts.push(new THREE.Vector2(40,15));
+			L_pts.push(new THREE.Vector2(40,20));		
+			L_pts.push(new THREE.Vector2(20,20));		
+			L_pts.push(new THREE.Vector2(20,0));
+			L_pts.push(new THREE.Vector2(20,0));
 			L_pts.push(new THREE.Vector2(0,0));
 			L_pts.push(new THREE.Vector2(0,25));
 			var L = new THREE.Shape(L_pts);
@@ -211,7 +221,7 @@
 			stats.update();
 		}
 		
-		var len = 10;
+		var len = 1;
 		var inc = 5;
 
 		function render() {
@@ -234,6 +244,7 @@
 					meshes[i].position.z-=Math.sqrt(idx);
 					idx-=1;
 				};
+				// meshes[i].rotation.y+=(i+1)/50;
 			};
 			idx=7;
 			for (var i = meshes.length/2-1; i >=0 ; i--) {
@@ -241,6 +252,7 @@
 					meshes[i].position.z-=Math.sqrt(idx);
 					idx-=1;
 				};
+				// meshes[i].rotation.y-=(-(i+1)/50);
 			};
 
 			if (len<next_letter_position_x-10){
@@ -257,7 +269,17 @@
 				if (inc>1) {
 					inc-=1;
 				};
-			}		
+			};
+			if (len>= next_letter_position_x-10) {
+				// movingLight1.position.z=-100;
+				// movingLight2.position.z=-100;
+			};		
+			// if (meshes[4].position.x==0) {
+			// 	for (var i = 0; i < meshes[4].geometry.vertices.length; i++) {
+			// 		var threeLight = new 
+			// 		lights.push()
+			// 	};
+			// };
 			// while(idx<10){
 			// 	if (floor_Mesh.geometry.vertices[0].x<next_letter_position_x-10) {
 			// 		scene.remove(floor_Mesh);
