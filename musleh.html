@@ -229,42 +229,6 @@
 					inc-=1;
 				};
 			};
-
-			// if (meshes[4].position.x==0) {
-			// 	for (var i = 0; i < meshes[4].geometry.vertices.length; i++) {
-			// 		var threeLight = new 
-			// 		lights.push()
-			// 	};
-			// };
-			// while(idx<10){
-			// 	if (floor_Mesh.geometry.vertices[0].x<next_letter_position_x-10) {
-			// 		scene.remove(floor_Mesh);
-			// 		var floor_geometry = new THREE.BoxGeometry(floor_Mesh.geometry.vertices[0].x+Math.pow(idx,2),6,16);
-			// 		var floor_material = new THREE.MeshPhongMaterial({color : 0x000000});
-			// 		floor_Mesh = new THREE.Mesh(floor_geometry,floor_material);
-			// 		floor_Mesh.position.set(-5,-4,8);
-			// 		scene.add(floor_Mesh);
-			// 	};
-			// 	idx++;
-			// };
-			// animate();
-
-			// idx=1;
-			// for (var i = 0; i < floor_Mesh.geometry.vertices.length/2; i++) {
-			// 	if (floor_Mesh.geometry.vertices[i]<next_letter_position_x/2-10) {
-			// 		floor_Mesh.geometry.vertices[i].x+=Math,pow(idx,2);
-			// 	};
-			// };
-			// if(yo<10 && (meshes[0].position.z<=0)){
-			// 	// for (var i = 0; i < floor_Mesh.geometry.vertices.length; i++) {
-			// 		alert('x: '+floor_Mesh.geometry.vertices[0].x+'y: '+floor_Mesh.geometry.vertices[0].y+'z: '+floor_Mesh.geometry.vertices[0].z+'           x: '+floor_Mesh.geometry.vertices[7].x+'y: '+floor_Mesh.geometry.vertices[7].y+'z: '+floor_Mesh.geometry.vertices[7].z);
-			// 	// };
-			// 	// alert(floor_Mesh.geometry.vertices[5].x);
-			// 	yo+=1;
-			// }
-			// meshes[4].position+=meshes[4].position.applyEuler(new THREE.Euler(0.01,0.0,0.01,'XYZ'));
-			// var quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,0),Math.PI/2);
-			// meshes[4].rotation.setFromQuaternion(quaternion);
 			movingLight.position.copy (satellite_mesh.position);
 			camera.lookAt(scene.position);
 
